@@ -2,11 +2,7 @@
 
 ### Overview
 
-**Backup and Recovery solution for Graylog Cloud. This policy is designed for the retention of all data involved in the Graylog Cloud service.This includes customer data, detail log retention, alerting, encryption, and data replication across sites. 
-
-
-
-
+Backup and Recovery solution for Graylog Cloud. This policy is designed for the retention of all data involved in the Graylog Cloud service.This includes customer data, detail log retention, alerting, encryption, and data replication across sites. 
 
 ### General Requirements
 
@@ -16,15 +12,11 @@ We must guarantee backups and complete data restoration for the full period of t
 
 The requirements described are the default and may be overridden by more detailed requirements for specific components.
 
-
-
 ### Platform Component Specifics
 
 #### AWS OpenSearch Service
 
-Snapshots in Amazon OpenSearch Service are backups of a cluster's indexes and state.  These must be confifgured for every cluster. *State* includes cluster settings, node information, index settings, and shard allocation.
-
-OpenSearch Service snapshots come in the following forms:
+Snapshots in Amazon OpenSearch Service are backups of a cluster's indexes and state.   *State* includes cluster settings, node information, index settings, and shard allocation. 
 
 ##### Automated Snapshots
 
@@ -33,7 +25,7 @@ flowchart LR
     id1(OpenSearch Domain) --Every 60 minutes--> id2(preconfigured S3 Bucket)
 ```
 
-Automated snapshots are only for cluster recovery. You can use them to restore your domain in the event of red cluster status or data loss. For more information, see [Restoring snapshots](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-snapshots.html#managedomains-snapshot-restore). 
+Automated snapshots are only for cluster recovery. These can use them to restore your domain in the event of red cluster status or data loss. These must be configured for every cluster. For more information, see [Restoring snapshots](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-snapshots.html#managedomains-snapshot-restore). 
 
 OpenSearch Service stores hourly automated snapshots in a preconfigured Amazon S3 bucket at no additional charge, retaining up to 336 of them for 14 days. 
 
@@ -41,7 +33,7 @@ Hourly snapshots are less disruptive because of their incremental nature. They a
 
 
 
-**<mark>NOTE:</mark>** If a cluster enters red status, all automated snapshots fail while that cluster status persists.
+**<mark>NOTE:</mark>** If a cluster enters red status, all automated snapshots fail while that cluster status persists. For troubleshooting steps, see [Red cluster status](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html#handling-errors-red-cluster-status).
 
 ##### Manual Snapshots
 
@@ -56,6 +48,6 @@ As the name suggests, the creation of these snapshots must be initiated manually
 
 Manual snapshots must be initiated every 15 minutes to provide a more recent recovery point than the automated snapshots and must be retained for 90 days.
 
-To prevent against accidental backup deletion or in the event of an AWS region outage the S3 bucket must mirrored to a secondary bucket using S3 object replication.
+To prevent accidental backup deletion or in the event of an AWS region outage the S3 bucket must be mirrored to a secondary bucket using S3 object replication.
 
 
